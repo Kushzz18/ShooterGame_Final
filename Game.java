@@ -6,7 +6,7 @@ public class Game {
     public Game() {
     }
 
-    public static void main(String[] args) {
+    public static void main() {
         JFrame window = new JFrame("Shooting Game");
         window.setDefaultCloseOperation(3);
         window.pack();
