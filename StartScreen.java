@@ -19,6 +19,7 @@ public class StartScreen extends JFrame {
     private static final long serialVersionUID = 1L;
 
     private JButton startButton;
+    private JButton exitButton;
     private JPanel panel;
     private Game game;
     private Clip clip;
@@ -55,9 +56,19 @@ public class StartScreen extends JFrame {
             }
         });
 
+        exitButton = new JButton("Exit");
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0); // Terminate the program when the exit button is clicked
+            }
+        });
+
         panel.setLayout(null);
         startButton.setBounds(200, 200, 100, 50);
+        exitButton.setBounds(200, 260, 100, 50);
         panel.add(startButton);
+        panel.add(exitButton);
         add(panel);
         setVisible(true);
 

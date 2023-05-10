@@ -15,10 +15,6 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 10;
 
     //Background Color
@@ -71,6 +67,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private long slowStartTimer;
     private int slowLength;
     private long slowElapsed;
+    private boolean gameOver;
 
     //Constructor
     public GamePanel(){
@@ -448,9 +445,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     enemies.get(i).setSlow(false);
             }
         }
-
-
+        if(player.isOver()) {
+            gameOver = true;
+        }
     }
+//    @Override
+//    protected void paintComponent(Graphics g) {
+//        super.paintComponent(g);
+//
+//        // Draw other game elements
+//
+//        if (gameOver) {
+//            // Draw restart button
+//            g.setColor(Color.WHITE);
+//            g.setFont(new Font("Century Gothic", Font.BOLD, 20));
+//            String restartText = "Game Over - Press R to Restart";
+//            int restartTextWidth = g.getFontMetrics().stringWidth(restartText);
+//            int restartTextX = (WIDTH - restartTextWidth) / 2;
+//            int restartTextY = HEIGHT / 2;
+//            g.drawString(restartText, restartTextX, restartTextY);
+//        }
+//    }
+
 
     public void gameRender(){
 
@@ -646,3 +662,4 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
 
 }
+

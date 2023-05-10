@@ -5,7 +5,6 @@ import javax.swing.JFrame;
 public class Game {
     public Game() {
     }
-
     public static void main() {
         JFrame window = new JFrame("Shooting Game");
         window.setDefaultCloseOperation(3);
