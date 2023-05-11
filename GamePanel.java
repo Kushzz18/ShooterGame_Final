@@ -10,49 +10,26 @@ import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener{
     private static final long serialVersionUID = 10;
-
-    //Background Color
-    private Color bgColor;
-
-    //Dimensions
-    public static int WIDTH;
+    private Color bgColor; //Background Color
+    public static int WIDTH;    //Dimensions
     public static int HEIGHT;
-
-    //FPS
     private int FPS;
-
-    //Game Loop
-    private boolean running;
-
-    //Graphics
-    public Graphics2D g;
+    private boolean running;   //Game Loop
+    public Graphics2D g;   //Graphics
     public BufferedImage image;
-
-    //Thread
     private Thread thread;
-
-    //Player
     public static Player player;
-
-    //Enemies
     public static ArrayList<Enemy> enemies;
-
-    //Bullets
     public static ArrayList<Bullet> bullets;
-
-    //explosions
     public static ArrayList<Explosion> explosions;
-
-    //PowerUp
     public static ArrayList<PowerUp> powerups;
-
-    //Laser
     private Laser laser;
     private boolean laserTaken;
 
@@ -68,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
     private int slowLength;
     private long slowElapsed;
     private boolean gameOver;
+    private int highScore;
 
     //Constructor
     public GamePanel(){
@@ -97,8 +75,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
 
         //Slow Down
         slowLength = 15000;
+        highScore = HighScoreManager.loadHighScore();
 
     }
+    GamePanel obj = new GamePanel();
 
     public void addNotify(){
 
@@ -424,7 +404,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
                     }
                 }
             }
-
         }
 
         if(laser!=null){
@@ -448,26 +427,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
         if(player.isOver()) {
             gameOver = true;
         }
+        if (player.getScore() > highScore) {
+            highScore = player.getScore();
+            HighScoreManager.saveHighScore(highScore);
+        }
     }
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-//
-//        // Draw other game elements
-//
-//        if (gameOver) {
-//            // Draw restart button
-//            g.setColor(Color.WHITE);
-//            g.setFont(new Font("Century Gothic", Font.BOLD, 20));
-//            String restartText = "Game Over - Press R to Restart";
-//            int restartTextWidth = g.getFontMetrics().stringWidth(restartText);
-//            int restartTextX = (WIDTH - restartTextWidth) / 2;
-//            int restartTextY = HEIGHT / 2;
-//            g.drawString(restartText, restartTextX, restartTextY);
-//        }
-//    }
-
-
     public void gameRender(){
 
         //Draw Background
@@ -509,8 +473,6 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             g.drawString(s, WIDTH/2 - length/2, HEIGHT/2);
 
         }
-
-
         //Lives
         for(int i = 0; i < player.getLives(); i++){
 
@@ -599,10 +561,39 @@ public class GamePanel extends JPanel implements Runnable, KeyListener{
             player.setFiring(false);
             //Listener off
             removeKeyListener(this);
+        }
+        g.setFont(new Font("Century Gothic", Font.BOLD, 12));
+        g.setColor(Color.WHITE);
+        g.drawString("HIGH SCORE: " + highScore, WIDTH - 110, 40);
+    }
+    public class HighScoreManager {
+        private static final String HIGH_SCORE_FILE = "highscore.txt";
 
+        public static int loadHighScore() {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(HIGH_SCORE_FILE));
+                String line = reader.readLine();
+                if (line != null && !line.isEmpty()) {
+                    return Integer.parseInt(line);
+                }
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return 0; // Default high score if file is empty or cannot be read
         }
 
+        public static void saveHighScore(int highScore) {
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(HIGH_SCORE_FILE));
+                writer.write(String.valueOf(highScore));
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
 
     public void gameDraw(){
 
